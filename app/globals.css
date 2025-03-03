@@ -3,19 +3,26 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: theme(colors.bg-gray);
+  --foreground: theme(colors.light);
+  --primary: theme(colors.primary);
+  --primary-dark: theme(colors.primary-dark);
+  --primary-light: theme(colors.primary-light);
+  --text-gray: theme(colors.text-gray);
+  --font-montserrat: 'Montserrat', sans-serif;
 }
 
 body {
+  /* display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem; */
+  height: 100%;
+  width: 100%;
+  background-color: var(--background);
+  /* padding: 2rem; */
+  font-family: var(--font-montserrat); /* Використання шрифта */
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
 }
