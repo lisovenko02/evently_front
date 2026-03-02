@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Sidebar from '../components/Sidebar'
 import { useAuthStore } from '@/store/auth/authStore'
 import { useRefreshTokensMutation } from '@/store/auth/authApi'
+import { SocketProvider } from '@/contexts/SocketContext'
 
 export default function RootLayout({
   children,
@@ -13,29 +14,55 @@ export default function RootLayout({
 }) {
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false)
 
-  const { accessToken } = useAuthStore()
+  const { accessToken, isAuthLoaded, setAuthLoaded } = useAuthStore()
   const [refreshTokens] = useRefreshTokensMutation()
 
   useEffect(() => {
     if (!accessToken) {
       refreshTokens()
+        .unwrap()
+        .catch(() => {
+          useAuthStore.getState().logout()
+        })
+        .finally(() => {
+          useAuthStore.getState().setAuthLoaded(true)
+        })
+    } else {
+      setAuthLoaded(true)
     }
-  }, [accessToken, refreshTokens])
+  }, [accessToken, refreshTokens, setAuthLoaded])
+
+  if (!isAuthLoaded) return <div>Loading auth...</div>
 
   return (
-    <div className="flex w-full min-h-screen">
-      <Sidebar
-        isExpanded={isSidebarExpanded}
-        setIsExpanded={setIsSidebarExpanded}
-      />
-      <main
-        className={`flex flex-col w-full h-full min-h-screen pt-16 ${
-          isSidebarExpanded ? 'md:pl-64' : 'md:pl-16'
-        }`}
-      >
-        <Navbar />
-        {children}
-      </main>
-    </div>
+    <SocketProvider>
+      {/* ROOT */}
+      <div className="flex h-screen w-full overflow-hidden">
+        {/* SIDEBAR */}
+        <aside
+          className={`fixed lg:relative top-0 left-0 z-50 h-full transition-all duration-300
+            ${isSidebarExpanded ? 'w-64' : 'w-0 lg:w-16'}
+          `}
+        >
+          <Sidebar
+            isExpanded={isSidebarExpanded}
+            setIsExpanded={setIsSidebarExpanded}
+          />
+        </aside>
+
+        {/* MAIN */}
+        <div className="flex flex-col flex-1 min-w-0">
+          {/* NAVBAR */}
+          <Navbar
+            isExpanded={isSidebarExpanded}
+            setIsExpanded={setIsSidebarExpanded}
+          />
+
+          {/* SCROLL CONTAINER */}
+
+          <main className="flex-1 overflow-hidden min-h-0">{children}</main>
+        </div>
+      </div>
+    </SocketProvider>
   )
 }

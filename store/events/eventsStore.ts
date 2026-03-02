@@ -1,18 +1,32 @@
 import { create } from 'zustand'
 import { devtools } from 'zustand/middleware'
-import { IEventsActions, IEventsState } from './eventsTypes'
+import { IEventsStore } from './eventsTypes'
 
-export const useEventsStore = create<IEventsState & IEventsActions>()(
+export const useEventsStore = create<IEventsStore>()(
   devtools(
     (set) => ({
       events: [],
       currentEvent: null,
-
       setEvents: (events) => set({ events }),
       setCurrentEvent: (event) => set({ currentEvent: event }),
-      addEvent: (event) =>
-        set((state) => ({ events: [...state.events, event] })),
     }),
-    { name: 'EventsStore' }
-  )
+    { name: 'EventsStore' },
+  ),
 )
+
+// import { IEventsActions, IEventsState } from './eventsTypes'
+
+// export const useEventsStore = create<IEventsState & IEventsActions>()(
+//   devtools(
+//     (set) => ({
+//       events: [],
+//       currentEvent: null,
+
+//       setEvents: (events) => set({ events }),
+//       setCurrentEvent: (event) => set({ currentEvent: event }),
+//       addEvent: (event) =>
+//         set((state) => ({ events: [...state.events, event] })),
+//     }),
+//     { name: 'EventsStore' }
+//   )
+// )

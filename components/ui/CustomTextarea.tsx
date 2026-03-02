@@ -5,6 +5,7 @@ type CustomTextareaProps<TFieldValues extends FieldValues> = {
   name: FieldPath<TFieldValues>
   label: string
   placeholder: string
+  required?: boolean
 }
 
 const CustomTextarea = <TFieldValues extends FieldValues>({
@@ -12,6 +13,7 @@ const CustomTextarea = <TFieldValues extends FieldValues>({
   name,
   label,
   placeholder,
+  required,
 }: CustomTextareaProps<TFieldValues>) => {
   const {
     field,
@@ -23,7 +25,10 @@ const CustomTextarea = <TFieldValues extends FieldValues>({
 
   return (
     <div>
-      <label className="block text-gray-300">{label}</label>
+      <label className="block text-gray-300">
+        {label}
+        {required && <strong className="text-red-600 ml-1">*</strong>}
+      </label>
       <textarea
         {...field}
         placeholder={placeholder}
@@ -35,3 +40,4 @@ const CustomTextarea = <TFieldValues extends FieldValues>({
 }
 
 export default CustomTextarea
+

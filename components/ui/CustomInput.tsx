@@ -6,6 +6,7 @@ type CustomInputProps<TFieldValues extends FieldValues> = {
   label: string
   placeholder: string
   type?: string
+  required?: boolean
 }
 
 const CustomInput = <TFieldValues extends FieldValues>({
@@ -13,6 +14,7 @@ const CustomInput = <TFieldValues extends FieldValues>({
   name,
   label,
   placeholder,
+  required,
   type = 'text',
 }: CustomInputProps<TFieldValues>) => {
   const {
@@ -25,17 +27,25 @@ const CustomInput = <TFieldValues extends FieldValues>({
 
   return (
     <div>
-      <label className="block text-gray-300">{label}</label>
+      <label className="block text-gray-300">
+        {label}
+
+        {required && <strong className="text-red-600 ml-1">*</strong>}
+      </label>
       <input
         {...field}
         type={type}
         placeholder={placeholder}
         onChange={(e) => {
           const value =
-            type === 'number' ? Number(e.target.value) || '' : e.target.value
+            type === 'number'
+              ? e.target.value === ''
+                ? undefined
+                : Number(e.target.value)
+              : e.target.value
           field.onChange(value)
         }}
-        className="w-full p-3 bg-dark border border-primary-dark rounded-md focus:ring-primary-light focus:outline-none"
+        className="w-full p-3 bg-dark border border-primary-dark rounded-md focus:ring-primary-light focus:outline-none h-[46px]"
       />
       {error && <p className="text-red-500 text-xs mt-1">{error.message}</p>}
     </div>

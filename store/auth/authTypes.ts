@@ -4,10 +4,25 @@ export interface IUserResponse {
   username: string
   firstName: string
   lastName: string
-  avatar: string
+  avatar: string // potom mb null
   points: number
+
   createdAt: number
   updatedAt: number
+}
+
+export interface IUserSimple {
+  id: number
+  username: string
+  lastName: string
+  firstName: string
+  avatar: string
+}
+
+export interface IUserMinimal {
+  id: number
+  username: string
+  avatar: string
 }
 
 export interface ILoginResponse {
@@ -27,6 +42,9 @@ export interface IRefreshResponse {
 export interface IAuthState {
   accessToken: string | null
   user: IUserResponse | null
+  isAuthLoaded: boolean
+
   setAuthData: (data: ILoginResponse) => void
   logout: () => void
+  setAuthLoaded: (loaded: boolean) => void
 }

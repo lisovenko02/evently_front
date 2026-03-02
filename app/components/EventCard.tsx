@@ -1,7 +1,22 @@
+import { IEvent } from '@/store/events/eventsTypes'
 import Image from 'next/image'
 import React from 'react'
 
-const EventCard = ({ event }) => {
+type PreviewEvent = {
+  id: string
+  title: string
+  category: string
+  points: number
+  membersLimit?: number | null
+  visibility?: 'OPEN' | 'CLOSED' | 'PRIVATE'
+  isOnline: boolean
+  image?: string | null
+  city?: string | null
+  country?: string | null
+  startTime?: string
+}
+
+const EventCard = ({ event }: { event: PreviewEvent | IEvent }) => {
   console.log('event', event)
   return (
     <div
@@ -20,7 +35,7 @@ const EventCard = ({ event }) => {
           className="w-full h-48 object-cover"
         />
         <div className="absolute top-0 left-0 bg-primary-dark bg-opacity-90 text-white p-2 text-xs font-semibold uppercase tracking-wide rounded-br-lg">
-          {event.eventStatus}
+          {event.visibility ? event.visibility : 'OPEN'}
         </div>
       </div>
       <div className="p-5">
@@ -58,11 +73,11 @@ const EventCard = ({ event }) => {
             {event.isOnline ? 'Online' : 'Offline'}
           </span>
 
-          {!event.isOnline && event.city && (
+          {/* {!event.isOnline && event.city && (
             <span className="text-sm text-gray-300">
               {event.city}, {event.country}
             </span>
-          )}
+          )} */}
         </div>
 
         {/* Date */}
@@ -76,18 +91,18 @@ const EventCard = ({ event }) => {
         )}
 
         {/* Members limit */}
-        <div className="flex gap-2 items-center mb-3">
+        {/* <div className="flex gap-2 items-center mb-3">
           <span className="text-gray-300">Members Limit:</span>
           <span className="font-semibold text-primary-light">
             {event.membersLimit}
           </span>
-        </div>
+        </div> */}
 
         {/* Points */}
         <div className="flex gap-2 items-center mb-3">
           <span className="text-gray-300">Points:</span>
           <span className="font-semibold text-primary-light">
-            {event.points}
+            {event.points ? event.points : 0}
           </span>
         </div>
       </div>

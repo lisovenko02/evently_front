@@ -1,49 +1,83 @@
+import { EventCategory, EventVisibility } from '@/app/types/eventTypes'
+import {
+  EventUserRoles,
+  IEventMemberWithMinimalUser,
+  IEventMemberWithUser,
+} from '../event-user/eventUserTypes'
+import { IUserMinimal } from '../auth/authTypes'
+
+export type EventLocation = {
+  city: string
+  country: string
+  address: string
+  coords: {
+    lng: string
+    lat: string
+  }
+}
+
+export interface IContextPermissions {
+  canJoin: boolean
+  canApply: boolean
+  canEdit: boolean
+  canManage: boolean
+}
+
 export interface IEvent {
   id: number
   title: string
-  description?: string
-  category:
-    | 'SPORTS'
-    | 'MUSIC'
-    | 'EDUCATION'
-    | 'BUSINESS'
-    | 'TECH'
-    | 'ART'
-    | 'GAMING'
-    | 'OTHER'
+  description: string | null
+  image: string
+  visibility: EventVisibility
+  category: EventCategory
+  points: number | null
+  startTime: string | null
+  endTime: string | null
   isOnline: boolean
-  startTime?: string
-  endTime?: string
-  image?: string
-  points: number
-  membersLimit?: number
-  organizerId: number
-  createdAt: string
-  updatedAt: string
-  eventStatus: 'OPEN_FOR_APPLICATIONS' | 'CLOSED_FOR_APPLICATIONS' | 'COMPLETED'
+  location: EventLocation | null
+  maxParticipants: number | null
 
-  city?: string
-  country?: string
-  latitude?: number
-  longitude?: number
+  organizer: IUserMinimal
 
-  members?: IEventMember[]
+  membersCount: number
 }
 
-export interface IEventMember {
-  userId: number
+export interface IUserEvent {
+  id: number
+  title: string
+  image: string
+  points: number | null
+  category: EventCategory
+  maxParticipants: number | null
+  isOnline: boolean
+  membersCount: number
+  role: EventUserRoles
+}
+
+export interface IEventContext {
+  isAuthenticated: boolean
+  isMember: boolean
+  role: EventUserRoles | null
+  visibility: EventVisibility
+
+  hasInvited: boolean
+  hasRequested: boolean
+  applicationId: number | null
+
+  permissions: IContextPermissions
+}
+export interface IEventMembersRequest {
   eventId: number
-  role: 'ORGANIZER' | 'PARTICIPANT'
-  status: 'PENDING' | 'APPROVED' | 'REJECTED'
+  full?: boolean
 }
 
-export interface IEventsState {
-  events: IEvent[]
-  currentEvent: IEvent | null
-}
+export type IEventMembersResponse =
+  | IEventMemberWithUser[]
+  | IEventMemberWithMinimalUser[]
 
-export interface IEventsActions {
-  setEvents: (events: IEvent[]) => void
-  setCurrentEvent: (event: IEvent | null) => void
-  addEvent: (event: IEvent) => void
+export interface IEventsStore {
+  events: Event[]
+  currentEvent: Event | null
+  setEvents: (events: Event[]) => void
+  setCurrentEvent: (event: Event) => void
 }

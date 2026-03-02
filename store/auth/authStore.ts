@@ -7,9 +7,18 @@ export const useAuthStore = create<IAuthState>()(
     (set) => ({
       accessToken: null,
       user: null,
+      isAuthLoaded: false,
+
       setAuthData: (data) =>
-        set({ accessToken: data.accessToken, user: data.user }),
+        set({
+          accessToken: data.accessToken,
+          user: data.user,
+          isAuthLoaded: true,
+        }),
+
       logout: () => set({ accessToken: null, user: null }),
+
+      setAuthLoaded: (loaded: boolean) => set({ isAuthLoaded: loaded }),
     }),
     { name: 'AuthStore' }
   )
