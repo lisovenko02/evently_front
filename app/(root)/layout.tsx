@@ -19,6 +19,7 @@ export default function RootLayout({
 
   useEffect(() => {
     if (!accessToken) {
+      console.log('accessToken', accessToken)
       refreshTokens()
         .unwrap()
         .catch(() => {

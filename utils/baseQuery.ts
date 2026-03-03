@@ -7,6 +7,7 @@ const baseQuery = fetchBaseQuery({
   credentials: 'include',
   prepareHeaders: (headers) => {
     const token = useAuthStore.getState().accessToken
+    console.log('token', token)
     if (token) headers.set('Authorization', `Bearer ${token}`)
     return headers
   },
@@ -15,9 +16,10 @@ const baseQuery = fetchBaseQuery({
 const baseQueryWithReauth = async (
   args: string | FetchArgs,
   api: BaseQueryApi,
-  extraOptions: object
+  extraOptions: object,
 ) => {
   const result = await baseQuery(args, api, extraOptions)
+  console.log('result', result)
 
   if (result.error && result.error.status === 401) {
     try {
@@ -28,10 +30,11 @@ const baseQueryWithReauth = async (
           credentials: 'include',
         },
         api,
-        extraOptions
+        extraOptions,
       )
 
       if (refreshResult.data) {
+        console.log('refreshResult', refreshResult)
         const data = refreshResult.data as ILoginResponse
         useAuthStore.getState().setAuthData(data)
         return await baseQuery(args, api, extraOptions)
